@@ -62,7 +62,7 @@ function update_goods() {
 			if (goods[i][4] > 0) {
 				goods[i][6] = goods[i][4] * goods[i][2] - goods[i][4] * goods[i][2] * goods[i][5] * 0.01;
 				result_price += goods[i][6];
-				document.querySelector('cart').insertAdjacentHTML('beforeend',
+				document.querySelector('.cart').insertAdjacentHTML('beforeend',
 					`
 				<tr class="align-middle">
 					<td>${i + 1}</td>
@@ -115,4 +115,34 @@ document.querySelector('.list').addEventListener('click', function (e) {
 			);
 		}
 	})
+})
+
+document.querySelector('.list').addEventListener('click', function (e) {
+	if (!e.target.dataset.goods) {
+		return;
+	}
+	let goods = JSON.parse(localStorage.getItem('goods'));
+	for (let i = 0; i < goods.length; i++) {
+		if (goods[i][3] > 0 && goods[i][0] == e.target.dataset.goods) {
+			goods[i].splice(3, 1, goods[i][3] - 1);
+			goods[i].splice(4, 1, goods[i][4] + 1);
+			localStorage.setItem('goods', JSON.stringify(goods));
+			update_goods();
+		}
+	}
+})
+
+document.querySelector('.cart').addEventListener('click', function (e) {
+	if (!e.target.dataset.delete) {
+		return;
+	}
+	let goods = JSON.parse(localStorage.getItem('goods'));
+	for (let i = 0; i < goods.length; i++) {
+		if (goods[i][4] > 0 && goods[i][0] == e.target.dataset.delete) {
+			goods[i].splice(3, 1, goods[i][3] + 1);
+			goods[i].splice(4, 1, goods[i][4] - 1);
+			localStorage.setItem('goods', JSON.stringify(goods));
+			update_goods();
+		}
+	}
 })
